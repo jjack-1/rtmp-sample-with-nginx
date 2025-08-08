@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Nginx HLS 스트리밍 테스트</title>
+    <!-- 1. HLS.js 라이브러리를 불러옵니다 (CDN 방식) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        /* 비디오 플레이어 스타일을 보기 좋게 꾸밉니다 */
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        #video-container { width: 80%; max-width: 960px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        video { width: 100%; display: block; }
+    </style>
+</head>
+<body>
+
+<div id="video-container">
+    <!-- 2. 영상을 재생할 video 태그를 준비합니다. controls 속성으로 재생바 등을 표시합니다. -->
+    <video id="videoPlayer" controls></video>
+</div>
+
+<script>
+    // 3. 비디오 플레이어 엘리먼트를 가져옵니다.
+    var video = document.getElementById('videoPlayer');
+    
+    // 4. HLS 스트림 URL을 여기에 입력합니다.
+    // 반드시 본인의 서버 IP와 스트림 키에 맞게 수정해주세요!
+    var hlsUrl = 'http://192.168.0.31:8080/hls/test-stream.m3u8';
+
+    // 5. 브라우저가 HLS를 지원하는지 확인하고, 지원하면 HLS.js를 사용합니다.
+    if (Hls.isSupported()) {
+        console.log("HLS.js is supported. Initializing player.");
+        var hls = new Hls(); // HLS.js 인스턴스 생성
+        hls.loadSource(hlsUrl); // 스트림 소스 불러오기
+        hls.attachMedia(video); // 비디오 엘리먼트에 연결
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            console.log("Manifest parsed. Starting playback.");
+            video.play(); // 매니페스트 파싱이 끝나면 자동으로 재생 시작
+        });
+    } 
+    // HLS.js를 지원하지 않지만, 브라우저가 자체적으로 HLS 재생을 지원하는 경우 (예: Safari)
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        console.log("Native HLS playback is supported.");
+        video.src = hlsUrl;
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+        });
+    }
+</script>
+
+</body>
+</html>
