@@ -35,7 +35,7 @@ class _LiveStreamPageState extends State<LiveStreamPage> {
   // ✅ [추가] 카메라가 준비되었는지 확인하는 새로운 상태 변수입니다.
   bool _isCameraReady = false;
 
-  String streamUrl = "rtmp://192.168.0.31:1935/live";
+  String streamUrl = "rtmp://172.23.144.1:1935/live";
   String streamKey = "test-stream";
 
   @override

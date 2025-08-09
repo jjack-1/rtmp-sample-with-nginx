@@ -1,11 +1,13 @@
-FROM tiangolo/nginx-rtmp
+# alfg/nginx-rtmp 이미지 사용 (ffmpeg 내장)
+FROM alfg/nginx-rtmp
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
+# 커스텀 nginx.conf 설정 파일 복사
+# 이 경로는 Entrypoint 스크립트가 사용하는 경로여야 합니다.
+COPY ./nginx.conf /etc/nginx/nginx.conf.template
 
-# 패키지 목록을 업데이트하고, net-tools와 ffmpeg를 한 번에 설치합니다.
-# 설치 후 apt 캐시를 제거하여 이미지 크기를 최적화합니다.
-RUN apt update && \
-    apt install -y net-tools ffmpeg && \
-    rm -rf /var/lib/apt/lists/*
+# HLS 세그먼트 저장 디렉토리 생성
+RUN mkdir -p /opt/data/hls
 
+# 포트 노출
 EXPOSE 80
+EXPOSE 1935
