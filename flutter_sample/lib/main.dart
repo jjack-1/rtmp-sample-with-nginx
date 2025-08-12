@@ -36,7 +36,7 @@ class _LiveStreamPageState extends State<LiveStreamPage> {
   bool _isCameraReady = false;
 
   String streamUrl = "rtmp://192.168.0.31:1935/live";
-  String streamKey = "test-stream";
+  String streamKey = "abc123";
 
   @override
   void initState() {
